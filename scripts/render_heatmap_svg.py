@@ -30,6 +30,10 @@ def main():
     first = dt.date.fromisoformat(ordered[0])
     start = first - dt.timedelta(days=(first.weekday() + 1) % 7)
     last = dt.date.fromisoformat(ordered[-1])
+    year_view = data.get("range") == "year"
+    if year_view:
+        # draw the whole calendar year, days still to come as empty outlines
+        last = dt.date(data["year"], 12, 31)
     weeks = []
     d = start
     while d <= last:
@@ -67,19 +71,26 @@ def main():
     for wi, week in enumerate(weeks):
         for di, date in enumerate(week):
             day = days.get(date.isoformat())
+            x, y = LEFT + wi * step, TOP + di * step
             if not day:
+                if year_view and date.year == data["year"]:
+                    out.append(
+                        f'<rect x="{x + 0.5}" y="{y + 0.5}" width="{CELL - 1}" height="{CELL - 1}" '
+                        f'rx="3" fill="none" stroke="{palette[0]}"/>'
+                    )
                 continue
             level = min(day["level"], len(palette) - 1)
             out.append(
-                f'<rect class="d" x="{LEFT + wi * step}" y="{TOP + di * step}" width="{CELL}" '
+                f'<rect class="d" x="{x}" y="{y}" width="{CELL}" '
                 f'height="{CELL}" rx="3" fill="{palette[level]}" '
                 f'style="animation-delay:{(wi + di) * 0.018:.3f}s"><title>{day["count"]} on {date}</title></rect>'
             )
 
     fy = H - 22
+    period = f"in {data['year']}" if year_view else "in the last year"
     out.append(
         f'<text x="{LEFT}" y="{fy}" fill="{t["dim"]}">'
-        f'<tspan fill="{t["key"]}">{data["total"]}</tspan> contributions in the last year'
+        f'<tspan fill="{t["key"]}">{data["total"]}</tspan> contributions {period}'
         f'<tspan dx="16">|</tspan>'
         f'<tspan dx="16">streak </tspan><tspan fill="{t["key"]}">{data["current_streak"]}d</tspan>'
         f'<tspan dx="10">(longest {data["longest_streak"]}d)</tspan></text>'

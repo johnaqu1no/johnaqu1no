@@ -40,7 +40,7 @@ def main():
     cfg = config()
     t = cfg["theme"]
     who = cfg["whoami"]
-    stats = Stats({k: f"{v:,}" if isinstance(v, int) else v
+    stats = Stats({k: f"{v:,}" if isinstance(v, int) and k != "year" else v
                    for k, v in (contributions() or {}).items()})
 
     host = cfg["prompt_host"]
@@ -59,7 +59,7 @@ def main():
             color = t["title"] if row[0] == host else t["border"]
             body.append(line(24, y, [(row[0], color)], idx))
         else:
-            key, val = row[0], row[1].format_map(stats)
+            key, val = row[0].format_map(stats), row[1].format_map(stats)
             if key:
                 parts = [(key.ljust(KEY_W - 2), t["key"]), ("> ", t["accent"]), (val, t["fg"])]
             else:

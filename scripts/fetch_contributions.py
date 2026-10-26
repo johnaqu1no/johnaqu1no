@@ -17,9 +17,9 @@ import requests
 from common import ROOT, config
 
 QUERY = """
-query($login: String!) {
+query($login: String!, $from: DateTime, $to: DateTime) {
   user(login: $login) {
-    contributionsCollection {
+    contributionsCollection(from: $from, to: $to) {
       totalCommitContributions
       totalPullRequestContributions
       restrictedContributionsCount
@@ -37,14 +37,22 @@ LEVELS = {"NONE": 0, "FIRST_QUARTILE": 1, "SECOND_QUARTILE": 2,
 
 
 def main():
-    username = config()["username"]
+    cfg = config()
+    username = cfg["username"]
+    # "year" = Jan 1 to today, "rolling" = GitHub's default last 12 months
+    span = cfg.get("range", "rolling")
+    today = dt.date.today()
+    variables = {"login": username}
+    if span == "year":
+        variables["from"] = f"{today.year}-01-01T00:00:00Z"
+        variables["to"] = f"{today.isoformat()}T23:59:59Z"
     token = os.environ.get("PROFILE_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token:
         raise SystemExit("set PROFILE_TOKEN or GITHUB_TOKEN")
 
     r = requests.post(
         "https://api.github.com/graphql",
-        json={"query": QUERY, "variables": {"login": username}},
+        json={"query": QUERY, "variables": variables},
         headers={"Authorization": f"Bearer {token}"},
         timeout=30,
     )
@@ -77,8 +85,10 @@ def main():
 
     best = max(ordered, key=lambda d: days[d]["count"])
     out = {
-        "fetched": dt.date.today().isoformat(),
+        "fetched": today.isoformat(),
         "username": username,
+        "range": span,
+        "year": today.year,
         "total": cal["totalContributions"],
         "commits": col["totalCommitContributions"],
         "prs": col["totalPullRequestContributions"],

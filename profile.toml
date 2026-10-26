@@ -2,6 +2,8 @@
 
 username = "johnaqu1no"
 prompt_host = "johnaqu1no@github"
+# heatmap span: "year" (Jan 1 to Dec 31, this year) or "rolling" (last 12 months)
+range = "year"
 
 [theme]
 bg = "#0d1117"
@@ -22,7 +24,7 @@ fg = "#c9d1d9"
 
 # Info card rows. key = "" continues the row above, an empty row is a spacer.
 # Values can use stats from data/contributions.json: {total} {current_streak}
-# {longest_streak} {commits} {prs} {repos_contributed}.
+# {longest_streak} {commits} {prs} {repos_contributed} {year}. Keys can use them too.
 [whoami]
 title = "~/whoami"
 rows = [
@@ -39,6 +41,6 @@ rows = [
   ["", "PacketSpy - live MC packet viewer (Fabric)"],
   [],
   ["Past", "disease.sh, hoplite.gg, skeld.net"],
-  ["Year", "{total} contributions, {commits} commits"],
+  ["{year}", "{total} contributions, {commits} commits"],
   ["", "{prs} PRs across {repos_contributed} repos"],
 ]
