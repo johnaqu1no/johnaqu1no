@@ -1,0 +1,44 @@
+# Everything the generators read. Edit this, then run `make` (or let the workflow do it).
+
+username = "johnaqu1no"
+prompt_host = "johnaqu1no@github"
+
+[theme]
+bg = "#0d1117"
+border = "#30363d"
+fg = "#c9d1d9"
+dim = "#8b949e"
+key = "#39d353"
+accent = "#58a6ff"
+title = "#f0f6fc"
+heatmap = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
+
+[ascii]
+source = "source-prepped.png"
+cols = 64
+# bright -> dark
+ramp = " .`:-=+*cs#%@"
+fg = "#c9d1d9"
+
+# Info card rows. key = "" continues the row above, an empty row is a spacer.
+# Values can use stats from data/contributions.json: {total} {current_streak}
+# {longest_streak} {commits} {prs} {repos_contributed}.
+[whoami]
+title = "~/whoami"
+rows = [
+  ["Now", "lode.gg - Lodestone, Minecraft plugin platform"],
+  ["", "phytor.gg / mindofneo.com"],
+  ["Company", "Lodestone Services LLC"],
+  [],
+  ["Stack", "Java / Kotlin / TypeScript / Python"],
+  ["Tools", "Paper, Fabric, Velocity, Gradle, Docker"],
+  [],
+  ["Projects", "Lodestone - Bookshelf, Lectern, Recap, ..."],
+  ["", "Sketchy - layered image editor for macOS"],
+  ["", "ClaudeComponents - edit React UI by talking"],
+  ["", "PacketSpy - live MC packet viewer (Fabric)"],
+  [],
+  ["Past", "disease.sh, hoplite.gg, skeld.net"],
+  ["Year", "{total} contributions, {commits} commits"],
+  ["", "{prs} PRs across {repos_contributed} repos"],
+]
